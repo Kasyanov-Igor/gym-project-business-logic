@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using gym_project_business_logic.Model;
 using gym_project_business_logic.Model.Domains;
 using gym_project_business_logic.Services.Interface;
+using PhoneNumbers;
 
 namespace gym_project_business_logic.Services
 {
@@ -32,7 +33,22 @@ namespace gym_project_business_logic.Services
 			return await _connection.Clients.FirstOrDefaultAsync(u => u.Login == login && u.Password == hashedPassword);
 		}
 
-		public async Task<bool> UpdateClientAsync(int clientId, DTOClient? newClient)
+        public bool IsValidPhoneNumber(string phoneNumber, string regionCode = "RU")
+        {
+            var phoneUtil = PhoneNumberUtil.GetInstance();
+
+            try
+            {
+                var numberProto = phoneUtil.Parse(phoneNumber, regionCode);
+                return phoneUtil.IsValidNumber(numberProto);
+            }
+            catch (NumberParseException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateClientAsync(int clientId, DTOClient? newClient)
 		{
 			var client = await _connection.Clients.FindAsync(clientId);
 			if (client == null)

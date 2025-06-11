@@ -10,5 +10,6 @@ namespace gym_project_business_logic.Services.Interface
 		public Task<Coach?> GetCoach(string login, string password);
 		public Task<bool> GetEmail(string emailAddress);
 		public Task<bool> UpdateCoachAsync(int coachId, DTOCoach? newCoach);
+		public bool IsValidPhoneNumber(string phoneNumber, string regionCode = "RU");
 	}
 }
